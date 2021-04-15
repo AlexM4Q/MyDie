@@ -9,17 +9,18 @@ namespace MyDie.App
 {
     internal static class Program
     {
+        private static readonly IDieContainer Container = new DieContainer();
+
         private static void Main()
         {
-            var container = new DieContainer();
-            container.RegisterApp();
+            Container.RegisterApp();
 
-            var catsRepository = container.Get<ICatsRepository>();
+            var catsRepository = Container.Get<ICatsRepository>();
             catsRepository.Save(new Cat {Name = "Коржик"});
             catsRepository.Save(new Cat {Name = "Компот"});
             catsRepository.Save(new Cat {Name = "Карамелька"});
 
-            var server = new NetbServer(x => container.Get(x) as NetbController);
+            var server = new NetbServer(x => Container.Get(x) as NetbController);
             var env = new Environment(server);
 
             var response = env.Request("home/index", "🍪");
